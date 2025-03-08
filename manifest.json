@@ -1,0 +1,11 @@
+{
+	"id": "compress",
+	"name": "File Compressor",
+	"version": "1.0.0",
+	"minAppVersion": "0.15.0",
+	"description": "This plugin will add the .ctxt file type which will allow you to compress notes to a smaller version.\nNOTE: If you create a link in a compressed file it will NOT show in graph view.\nWhen using this plugin data loss is possible, we've tried to minimise it. But theres always a change. If you do experiance data loss we are not liable. But you may create an issue request with the raw data(do not provide personal info).",
+	"author": "networkmastered",
+	"authorUrl": "https://github.com/networkmastered",
+	"fundingUrl": "https://github.com/networkmastered",
+	"isDesktopOnly": false
+}
