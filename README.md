@@ -1,43 +1,59 @@
-# Obsidian File Compressor
+# File Compressor
+<i>This is a plugin made for obsidian.</i>
 
-This plugin is designed to take large files and then compress them. Can typically do most file types. If you are compressing something other than a MD(MarkDown) please copy it so you have a backup. When a file is in a compressed state if its not human-readable or a plugin manages it then it may have issues.
+File compressor creates a new file type which is a .ctxt(compressed txt). Although it says txt it does support markdown. The plugin is designed to be as automated as possible. Which means that you do not need to compress and decompress the files yourself. All you need to do is click the "Create new ctxt" button. Which will then create the new ctxt in the root directory of your vault.
+
+Once you have a new ctxt file you just need to edit it like a normal file. The plugin will do the rest. If you ever see the compressed data then close the tab and re-open it.
+
+The editor works by taking obsidians default markdown editor and then telling it to not refresh it to the saved data(which doesnt always work), then once obsidian saves the plugin will then copy all of the contents of the file and then compress it.
+
+Only .MD files have been tested. But we plan on making it work with multiple plugins by only compressing the data once youre done! This will come later though. But as of now it should still be able to compress any file. As long as it is just plain text. Once again though if you do convert a file then the plugin wont read it. If the plugin also uses a specific file type then it will not be saved. Instead itll be converted to a MD. This is planned to change.
 
 ## Installation
-There are two ways to install this plugin which are as follows:
+You can install/update the plugin in one of two ways:
 
-1. Install it from the obsidian community plugins tab.
+1. You can install and update the pluin from the obsidian community plugin marketplace.
 
-2. Get the latest main.js and manifest.json from the github releases and drag it into your vault's ".obsidian/plugins/compressor" folder. The "compressor" folder may not be there. If not then you should be able to create one. If you are on linux the .obsidian folder may be hidden, depending on your operating system it will be different. You should be able to look up how to view hidden folders. Or optionally you can cd into it.
+2. You may also go to this repositorys github releases and then download the latest main and manifest then go into your vaults directory, open up your .obsidian folder, if you are on linux you may need to find out how to view hidden files. Then you just need to open up the plugins folder, create a new folder. You can name the folder whatever you like, or just "FileCompressor" or "compressor" then just drag the main and manifest files you downloaded into the folder!
 
-## How to use
-This plugin is made to need as little interaction as possible. All you need to do it create a new ctxt file(compressed text) and then open it up. Then it will do the compression for you.
-
-If you wish to turn a file to a ctxt you can press the button with 2 arrows which will then convert the file. If you do use this then you will need to minimise and re open obsidian. Or click on the taskbar and back. This is an unknown bug.
-
-This plugin does support markdown and uses the same editor as markdown files.
-
-## What are the differences like?
-The differences cannot be defined. But the bigger the file is the more it should be able to do. At the start it will not compress as it will not be any smaller.
-
-## Buttons
-This plugin comes with two buttons.
-> **Create CTXT** - creates a new compressed file.
-
-> **Convert to CTXT** - converts the currently open file to a ctxt file.
-
-## Settings
-> **Print Results** - Each time a compressed file is saved it will show the compression ratio(percentage of file size)
-
-> **Show File Size** - This setting shows the currently opened/editing file's size in the status bar.
+*simplified:*
+- Go to releases and download main.js and manifest.json
+- Goto your obsidian vault
+- open vault/.obsidian/Plugins/compressor (or create compressor folder)
+- place the main and manifest into the compressor folder
 
 
+## Drawbacks
+1. Changing a files contents to a more obscure one will come with the risk of data loss.
+2. Links do work but will not show up in the Graph.
+3. Plugins may fail to read the data.
 
-NOTICE:
-- By using this plugin the "Graph View" will NOT show links(if you know of a way to do this, please let me know). Linking to a ctxt file will also not show it.!
+## Uninstalling
+[!WARNING]
+BEFORE UNINSTALLING/DISABLING THIS PLUGIN. CONVERT YOUR FILES BACK TO AN MARKDOWN!
 
-- Compressing a file that another plugin edits will stop that plugin from being able to open it, re convert it.
+<i style="color:red">If not, you will not be able to access compressed files. You can still reinstall the plugin and convert.</i>
 
-- This plugin is not perfect. Data loss is possible. In the case of dataloss, please make sure that you didnt accidently edit/tamper with the compressed data. Then and only if your fine with sharing the file you could upload an issue request with the contents. DO NOT SHARE PERSONAL INFO!
+## Future
+We plan on adding better compression and a better system to allow files to be in plaintext while editing.
 
+## What comes packaged:
+The compression plugin is packaged with pako, a compression library and a custom one. The plugin also comes with the following **features**:
 
-If there are any issues or requests, make sure to create a request!
+Buttons:
+> "**Create new ctxt**" - will create a new .ctxt file.<br>
+> "**Convert open file**" - This will convert the currently opened/most recently edited file from whatever it is to a ctxt. If it is a ctxt it gets converted to .md
+
+<br>Settings:
+> "**Show compression results**" - This setting shows a toast of the compression ratio of the most recently saved file(if it does get compressed)<br>
+> "**Show file storage in statusbar**" - This does what it says and will show the most recently opened/edited file's storage space in bytes at the bottom on the statusbar.
+
+## Compression Ratios:
+These ratios will be based off of 1MB of lorem ipsum.
+
+*(can be found at https://www.sample-videos.com/download-sample-text-file.php)*
+
+> What is a compression ratio?<br>a compression ratio is how much the compressed version takes up of the raw version. (25kB compressed of 100kB = 25%, 25kB compressed of 50kB = 50%)
+
+1.0.0-1.0.2-1.1.0 PRE-RELEASE: Error
+1.0.0: 33.9%
