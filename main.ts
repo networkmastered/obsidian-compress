@@ -246,13 +246,13 @@ export default class compressorPlugin extends Plugin {
 function compressfile(data: string, notice?: boolean, settings?: compressorSettingsData) {
 	const comp = deflate(data)
 	var inf = inflate(comp)
-	if (inf && new TextDecoder().decode(inf) != data) {
+	if (inf && typeof(inf) != "string" && new TextDecoder().decode(inf) != data) {
 		if (notice) new Notice("Revert is corrupted.", 3000)
 		throw new Error("Revert not same,")
 	}
 	if (comp) {
 		var bb = new BB()
-		comp.forEach((byte) => {
+		comp.forEach((byte:Number) => {
 			// console.log(byte)
 			bb.WU(byte)
 		})
