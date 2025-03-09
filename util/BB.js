@@ -34,23 +34,6 @@ export class BB {
         return str
     }
     WU(value) {
-        this.BB[this.PT + 1] = value % 2
-        value = Math.floor(value / 2)
-        this.BB[this.PT + 2] = value % 2
-        value = Math.floor(value / 2)
-        this.BB[this.PT + 3] = value % 2
-        value = Math.floor(value / 2)
-        this.BB[this.PT + 4] = value % 2
-        value = Math.floor(value / 2)
-        this.BB[this.PT + 5] = value % 2
-        value = Math.floor(value / 2)
-        this.BB[this.PT + 6] = value % 2
-        value = Math.floor(value / 2)
-        this.BB[this.PT + 7] = value % 2
-        value = Math.floor(value / 2)
-        this.BB[this.PT + 8] = value % 2
-        value = Math.floor(value / 2)
-        this.PT += 8
         for (let i = 0; i < 8; i++) {
             this.PT++
             this.BB[this.PT] = value % 2
