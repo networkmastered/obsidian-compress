@@ -66,7 +66,7 @@ export default class compressorPlugin extends Plugin {
 			}
 		)
 
-		this.app.workspace.on("file-open", (file) => {
+		this.registerEvent(this.app.workspace.on("file-open", (file) => {
 			if (file && file.extension == "ctxt" && globalLeafs.length <= 0 && (new Date().getTime() - loadTime) < 1000) {
 				this.app.workspace.getMostRecentLeaf()?.openFile(file)
 			}
@@ -75,7 +75,7 @@ export default class compressorPlugin extends Plugin {
 					if (statusBarItemEl2 && this.settings.FileSize) statusBarItemEl2.setText(data.length + "B")
 				})
 			}
-		})
+		}))
 
 		this.registerEvent(this.app.vault.on('modify', (file) => {
 			var file2 = this.app.vault.getFileByPath(file.path)
@@ -219,21 +219,13 @@ export default class compressorPlugin extends Plugin {
 
 		// 		this.app.vault.read(file).then((data) => {
 		// 			if (!data.includes("\n") && /[A-z0-9\-_]/gm.test(data) && !data.includes(" ")) {
-		// 				var bb = new BB()
-		// 				bb.G(data)
-		// 				var precont = []
-		// 				while (true) {
-		// 					var now = bb.RU()
-		// 					if (now >= 0) {
-		// 						precont[precont.length] = now
-		// 					} else break
-		// 				}
-		// 				var cont = new Uint8Array(precont)
-		// 				if (cont && cont.length > 0) {
-		// 					var decomp = inflate(cont)
-		// 					if (typeof (decomp) == "object") {
-		// 						if (pane) pane.innerHTML += `<div id="AEDTCOMPDNEOUTSNTTIS!" style="position: absolute;left:0%;right:0%;width:100%;height:100%;background-color:rgba(20,20,20,0.6);z-index: 99999999999;">Content Compressed.</div>`
-		// 					}
+		// 				var isctxt = false
+		// try {
+		// 	decompressfile(data)
+		// 	isctxt = true
+		// } catch (_) { }
+		// 				if (isctxt) {
+		// 					if (pane) pane.innerHTML += `<div id="AEDTCOMPDNEOUTSNTTIS!" style="position: absolute;left:0%;right:0%;width:100%;height:100%;background-color:rgba(20,20,20,0.6);z-index: 99999999999;">Content Compressed.</div>`
 		// 				}
 		// 			}
 		// 		})
