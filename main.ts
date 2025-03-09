@@ -92,7 +92,6 @@ export default class compressorPlugin extends Plugin {
 						} catch (err) { console.log(err) }
 						if (compress) {
 							globalLeafs.forEach((leaf) => {
-								console.log(leaf)
 								if (leaf[0] == "ctxt" && leaf[2] == file.path && leaf[3]) {
 									// leaf[3].editor.setLine("")
 									leaf[3].unload()
@@ -105,7 +104,6 @@ export default class compressorPlugin extends Plugin {
 									leaf[3].setViewData(data, true)
 								}
 							})
-							console.log(file.name + " has been saved")
 						}
 					}
 				})
@@ -137,7 +135,6 @@ export default class compressorPlugin extends Plugin {
 		const ribbonIconEl3 = this.addRibbonIcon('up-and-down-arrows', 'Convert currently opened file', (evt: MouseEvent) => {
 			if (confirm("Are you sure you want to convert")) { //will this work? electron confirms dont exit. Oh it does
 				var file = this.app.workspace.getActiveFile()
-				console.log(file)
 				if (file) {
 					if (file.extension == "ctxt") {
 						this.app.vault.read(file).then((data) => {

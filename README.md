@@ -4,7 +4,9 @@ This plugin is designed to take large files and then compress them. Can typicall
 
 ## Installation
 There are two ways to install this plugin which are as follows:
+
 1. Install it from the obsidian community plugins tab.
+
 2. Get the latest main.js and manifest.json from the github releases and drag it into your vault's ".obsidian/plugins/compressor" folder. The "compressor" folder may not be there. If not then you should be able to create one. If you are on linux the .obsidian folder may be hidden, depending on your operating system it will be different. You should be able to look up how to view hidden folders. Or optionally you can cd into it.
 
 ## How to use
@@ -30,7 +32,12 @@ This plugin comes with two buttons.
 
 
 
+NOTICE:
+- By using this plugin the "Graph View" will NOT show links(if you know of a way to do this, please let me know). Linking to a ctxt file will also not show it.!
 
+- Compressing a file that another plugin edits will stop that plugin from being able to open it, re convert it.
+
+- This plugin is not perfect. Data loss is possible. In the case of dataloss, please make sure that you didnt accidently edit/tamper with the compressed data. Then and only if your fine with sharing the file you could upload an issue request with the contents. DO NOT SHARE PERSONAL INFO!
 
 
 If there are any issues or requests, make sure to create a request!
