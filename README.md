@@ -5,7 +5,7 @@ This plugin is designed to take large files and then compress them. Can typicall
 ## Installation
 There are two ways to install this plugin which are as follows:
 1. Install it from the obsidian community plugins tab.
-2. Get the latest main.js from github releases and drag it into your vault's ".obsidian/plugins/compressor" folder. The "compressor" folder may not be there. If not then you should be able to create one. If you are on linux the .obsidian folder may be hidden, depending on your operating system it will be different. You should be able to look up how to view hidden folders. Or optionally you can cd into it.
+2. Get the latest main.js and manifest.json from the github releases and drag it into your vault's ".obsidian/plugins/compressor" folder. The "compressor" folder may not be there. If not then you should be able to create one. If you are on linux the .obsidian folder may be hidden, depending on your operating system it will be different. You should be able to look up how to view hidden folders. Or optionally you can cd into it.
 
 ## How to use
 This plugin is made to need as little interaction as possible. All you need to do it create a new ctxt file(compressed text) and then open it up. Then it will do the compression for you.
