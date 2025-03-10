@@ -17,6 +17,7 @@ export class BB {
                 ch = Math.floor(ch / 2)
             }
         }
+        this.PT = 0
     }
     G() {
         let str = ""

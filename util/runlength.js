@@ -29,9 +29,9 @@ function DNum(encoded) {
 }
 //V2
 export function encodeSafe(str) {
-    var count = 0
-    var typ = ""
-    var out = ""
+    let count = 0
+    let typ = ""
+    let out = ""
     str.split("").forEach((char) => {
         if (char != typ && typ != "") {
             if (count > 2) {
@@ -56,8 +56,8 @@ export function encodeSafe(str) {
     }
 }
 export function decodeSafe(str) {
-    var count = ""
-    var out = ""
+    let count = ""
+    let out = ""
     str.split("").forEach((char) => {
         if (charMap.includes(char)) {
             count += char

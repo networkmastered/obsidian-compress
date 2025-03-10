@@ -9,30 +9,32 @@ interface compressorSettingsData {
 	PrintResult: boolean;
 	FileSize: boolean;
 	LeaveRawLinks: boolean;
+	Debug: boolean;
 }
 
 const DEFAULT_SETTINGS: compressorSettingsData = {
 	// mySetting: 'default',
 	PrintResult: true,
 	FileSize: true,
-	LeaveRawLinks: true
+	LeaveRawLinks: true,
+	Debug: false
 }
-var globalLeafs: any[] = []
-var NoticePool: Notice[] = []
-var statusBarItemEl2: (undefined | HTMLElement);
+let globalLeafs: any[] = []
+let NoticePool: Notice[] = []
+let statusBarItemEl2: (undefined | HTMLElement);
 export default class compressorPlugin extends Plugin {
 	settings: compressorSettingsData;
 
 	async onload() {
-		var loadTime = new Date().getTime()
+		let loadTime = new Date().getTime()
 
 		this.registerExtensions(["ctxt"], "ctxt")
 
 		this.registerView("ctxt",
 			(leaf) => {
-				var hook = new MarkdownView(leaf)
-				var f = setInterval(() => {
-					var file = hook.file || this.app.workspace.getActiveFile()
+				let hook = new MarkdownView(leaf)
+				let f = setInterval(() => {
+					let file = hook.file || this.app.workspace.getActiveFile()
 					if (file) {
 						clearInterval(f)
 						if (file && file.extension == "ctxt") {
@@ -45,9 +47,9 @@ export default class compressorPlugin extends Plugin {
 								if (file && data && (!data.includes("\n") && !data.includes(" "))) {
 									new Notice("Attempting to load.")
 									setTimeout(() => {
-										var decompress = null
+										let decompress = null
 										try {
-											decompress = decompressfile(data)
+											decompress = decompressfile(data, this.settings.Debug || false)
 										} catch (err) { console.log(err) }
 										if (decompress) {
 											hook.setViewData(decompress, true)
@@ -78,17 +80,17 @@ export default class compressorPlugin extends Plugin {
 		}))
 
 		this.registerEvent(this.app.vault.on('modify', (file) => {
-			var file2 = this.app.vault.getFileByPath(file.path)
+			let file2 = this.app.vault.getFileByPath(file.path)
 			if (file2 && file2.extension == "ctxt") {
 				this.app.vault.read(file2).then((data) => {
 					if (statusBarItemEl2 && this.settings.FileSize) statusBarItemEl2.setText(data.length + "B")
 					if (file2 && data && (data.includes("\n") || data.includes(" "))) {
-						var compress = null
+						let compress = null
 						try {
 							NoticePool.forEach((n) => {
 								if (n) n.hide()
 							})
-							compress = compressfile(data, false, this.settings)
+							compress = compressfile(data, this.settings.Debug || false, this.settings)
 						} catch (err) { console.log(err) }
 						if (compress) {
 							globalLeafs.forEach((leaf) => {
@@ -120,10 +122,10 @@ export default class compressorPlugin extends Plugin {
 		// 	this.startAction()
 		// });
 		const ribbonIconEl2 = this.addRibbonIcon('checkmark', 'Create new ctxt', (evt: MouseEvent) => {
-			var filen = `newctxtfile${(new Date().getTime().toString().substring(10))}${Math.floor(Math.random() * 500)}.ctxt`
+			let filen = `newctxtfile${(new Date().getTime().toString().substring(10))}${Math.floor(Math.random() * 500)}.ctxt`
 			this.app.vault.create("./" + filen, "Write away!")//.then((filex) => {
 			// setTimeout(()=>{
-			// 	var file = this.app.vault.getFileByPath(filen)
+			// 	let file = this.app.vault.getFileByPath(filen)
 			// 	if (file) {
 			// 		console.log(file, this.app.workspace.getMostRecentLeaf())
 			// 		this.app.workspace.getMostRecentLeaf()?.openFile(file)
@@ -134,13 +136,13 @@ export default class compressorPlugin extends Plugin {
 		});
 		const ribbonIconEl3 = this.addRibbonIcon('up-and-down-arrows', 'Convert currently opened file', (evt: MouseEvent) => {
 			if (confirm("Are you sure you want to convert")) { //will this work? electron confirms dont exit. Oh it does
-				var file = this.app.workspace.getActiveFile()
+				let file = this.app.workspace.getActiveFile()
 				if (file) {
 					if (file.extension == "ctxt") {
 						this.app.vault.read(file).then((data) => {
-							var raw = data
+							let raw = data
 							try {
-								var dc = decompressfile(data, true)
+								let dc = decompressfile(data, this.settings.Debug || false)
 								if (dc) raw = dc
 							} catch (_) {
 								new Notice("Failed to decompress, plainText?")
@@ -162,9 +164,9 @@ export default class compressorPlugin extends Plugin {
 						})
 					} else {
 						this.app.vault.read(file).then((data) => {
-							var raw = data
+							let raw = data
 							try {
-								var dc = compressfile(data, true)
+								let dc = compressfile(data, this.settings.Debug || false)
 								if (dc) raw = dc
 							} catch (_) {
 								new Notice("Failed to compress.")
@@ -202,7 +204,7 @@ export default class compressorPlugin extends Plugin {
 			id: 'createctxt',
 			name: 'Create a new ctxt file in root',
 			callback: () => {
-				var filen = `newctxtfile${(new Date().getTime().toString().substring(10))}${Math.floor(Math.random() * 500)}.ctxt`
+				let filen = `newctxtfile${(new Date().getTime().toString().substring(10))}${Math.floor(Math.random() * 500)}.ctxt`
 				this.app.vault.create("./" + filen, "Write away!")
 			}
 		});
@@ -211,12 +213,12 @@ export default class compressorPlugin extends Plugin {
 
 
 		// this.registerInterval(window.setInterval(() => {
-		// 	var file = this.app.workspace.getActiveFile()
+		// 	let file = this.app.workspace.getActiveFile()
 		// 	if (file != null) {
 
 		// 		this.app.vault.read(file).then((data) => {
 		// 			if (!data.includes("\n") && /[A-z0-9\-_]/gm.test(data) && !data.includes(" ")) {
-		// 				var isctxt = false
+		// 				let isctxt = false
 		// try {
 		// 	decompressfile(data)
 		// 	isctxt = true
@@ -244,26 +246,31 @@ export default class compressorPlugin extends Plugin {
 	}
 }
 function compressfile(data: string, notice?: boolean, settings?: compressorSettingsData) {
+	if (notice) new Notice("Started", 3000)
 	const comp = deflate(data)
-	var inf = inflate(comp)
-	if (inf && typeof(inf) != "string" && new TextDecoder().decode(inf) != data) {
+	let inf = inflate(comp)
+	if (inf && typeof (inf) != "string" && new TextDecoder().decode(inf) != data) {
 		if (notice) new Notice("Revert is corrupted.", 3000)
 		throw new Error("Revert not same,")
 	}
 	if (comp) {
-		var bb = new BB()
-		comp.forEach((byte:Number) => {
+		if (notice) new Notice("MEST", 3000)
+		let bb = new BB()
+		comp.forEach((byte: Number) => {
 			// console.log(byte)
 			bb.WU(byte)
 		})
-		// var linkblk = ""
+		if (notice) new Notice("SWAP", 3000)
+		// let linkblk = ""
 		// 	;[...data.matchAll(/\[\[[^\]]*\]\]/gm)].forEach((match) => {
 		// 		console.log(match)
 		// 		linkblk += match[0]
 		// 	})
-		var encd = encodeSafe(bb.G())
+		let encd = encodeSafe(bb.G())
+		if (notice) new Notice("RLE", 3000)
 		if (encd) {
-			var content = `DATABLK` + encd
+			if (notice) new Notice("METADATA SET.", 3000)
+			let content = `DATABLK` + encd
 			if (content && content.length < data.length) {
 				if (notice) new Notice("Success!")
 				if (settings && settings.PrintResult) {
@@ -279,18 +286,26 @@ function compressfile(data: string, notice?: boolean, settings?: compressorSetti
 	}
 }
 function decompressfile(data: string, notice?: boolean) {
-	var bb = new BB()
+	if (notice) new Notice("START", 3000)
+	let bb = new BB()
 	bb.F(decodeSafe(data.substring(data.indexOf("DATABLK") + 7)))
-	var precont: number[] = []
+	let precont: number[] = []
 	while (true) {
-		var now = bb.RU()
+		let now = bb.RU()
 		if (!isNaN(now)) {
 			precont[precont.length] = now
 		} else break
 	}
-	var cont = new Uint8Array(precont)
+	if (notice) new Notice("OUT", 3000)
+	let cont = new Uint8Array(precont)
+	if (notice) console.log(precont)
+	if (notice) console.log(cont)
+	if (notice) new Notice("SWAP", 3000)
 	if (cont && cont.length > 0) {
-		var decomp = inflate(cont)
+		if (notice) new Notice("INF", 3000)
+		let decomp = inflate(cont)
+		if (notice) console.log(decomp)
+		if (notice) new Notice("DONE, DECODE", 3000)
 		if (typeof (decomp) == "object") {
 			decomp = new TextDecoder().decode(decomp)
 			if (notice) new Notice("Success!")
@@ -336,5 +351,14 @@ class compressorSettings extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName('NOTICE:')
 			.setDesc('Unfortunetly the graph view will not maintain links. The graph cannot read the compressed data. Nor if the links are raw')
+		new Setting(containerEl)
+			.setName('Debug')
+			.setDesc('Toast all data')
+			.addToggle(bool => bool
+				.setValue(this.plugin.settings.Debug)
+				.onChange(async (value) => {
+					this.plugin.settings.Debug = value;
+					await this.plugin.saveSettings();
+				}));
 	}
 }
