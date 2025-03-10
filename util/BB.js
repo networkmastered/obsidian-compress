@@ -34,16 +34,19 @@ export class BB {
         }
         return str
     }
-    WU(value) {
-        for (let i = 0; i < 8; i++) {
+    WU(r, val) {
+        for (let i = 0; i < r; i++) {
             this.PT++
-            this.BB[this.PT] = value % 2
-            value = Math.floor(value / 2)
+            this.BB[this.PT] = val % 2
+            val = Math.floor(val / 2)
         }
     }
-    RU() {
-        let r = this.BB[this.PT+1] * this.PO[0] + this.BB[this.PT + 2] * this.PO[1] + this.BB[this.PT + 3] * this.PO[2] + this.BB[this.PT + 4] * this.PO[3] + this.BB[this.PT + 5] * this.PO[4] + this.BB[this.PT + 6] * this.PO[5] + this.BB[this.PT + 7] * this.PO[6] + this.BB[this.PT + 8] * this.PO[7]
-        this.PT += 8
+    RU(val) {
+        let r = 0
+        for (let i = 0; i < val; i++) {
+            this.PT++
+            r += this.BB[this.PT] * this.PO[i]
+        }
         return r
     }
 }

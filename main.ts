@@ -1,8 +1,8 @@
 import { App, MarkdownView, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
-import { inflate, deflate } from "./util/pakoMinified"
-import { BB } from "./util/BB"
-import { encodeSafe, decodeSafe } from "./util/runlength"
-
+// import { inflate, deflate } from "./util/pakoMinified"
+// import { BB } from "./util/BB"
+// import { encodeSafe, decodeSafe } from "./util/runlength"
+import { netcompress, netdecompress } from "./util/networkmastercompression"
 
 interface compressorSettingsData {
 	// mySetting: string;
@@ -62,12 +62,10 @@ export default class compressorPlugin extends Plugin {
 							})
 						}
 					}
-
 				}, 10)
 				return hook
 			}
 		)
-
 		this.registerEvent(this.app.workspace.on("file-open", (file) => {
 			if (file && file.extension == "ctxt" && globalLeafs.length <= 0 && (new Date().getTime() - loadTime) < 1000) {
 				this.app.workspace.getMostRecentLeaf()?.openFile(file)
@@ -78,7 +76,6 @@ export default class compressorPlugin extends Plugin {
 				})
 			}
 		}))
-
 		this.registerEvent(this.app.vault.on('modify', (file) => {
 			let file2 = this.app.vault.getFileByPath(file.path)
 			if (file2 && file2.extension == "ctxt") {
@@ -245,77 +242,106 @@ export default class compressorPlugin extends Plugin {
 		await this.saveData(this.settings);
 	}
 }
+// function compressfile(data: string, notice?: boolean, settings?: compressorSettingsData) {
+// 	if (notice) new Notice("Started", 3000)
+// 	const comp = deflate(data)
+// 	let inf = inflate(comp)
+// 	if (inf && typeof (inf) != "string" && new TextDecoder().decode(inf) != data) {
+// 		if (notice) new Notice("Revert is corrupted.", 3000)
+// 		throw new Error("Revert not same,")
+// 	}
+// 	if (comp) {
+// 		if (notice) new Notice("MEST", 3000)
+// 		let bb = new BB()
+// 		comp.forEach((byte: Number) => {
+// 			// console.log(byte)
+// 			bb.WU(8,byte)
+// 		})
+// 		if (notice) new Notice("SWAP", 3000)
+// 		// let linkblk = ""
+// 		// 	;[...data.matchAll(/\[\[[^\]]*\]\]/gm)].forEach((match) => {
+// 		// 		console.log(match)
+// 		// 		linkblk += match[0]
+// 		// 	})
+// 		let encd = encodeSafe(bb.G())
+// 		if (notice) new Notice("RLE", 3000)
+// 		if (encd) {
+// 			if (notice) new Notice("METADATA SET.", 3000)
+// 			let content = `DATABLK` + encd
+// 			if (content && content.length < data.length) {
+// 				if (notice) new Notice("Success!")
+// 				if (settings && settings.PrintResult) {
+// 					NoticePool.push(new Notice(`Compression:\nratio:${((content.length / data.length) * 100).toFixed(1)}%`))
+// 				}
+// 				return content
+// 			} else {
+// 				if (notice) new Notice("File isnt smaller.")
+// 			}
+// 		} else {
+// 			new Notice("Encoder failure.")
+// 		}
+// 	}
+// }
+// function decompressfile(data: string, notice?: boolean) {
+// 	if (notice) new Notice("START", 3000)
+// 	let bb = new BB()
+// 	bb.F(decodeSafe(data.substring(data.indexOf("DATABLK") + 7)))
+// 	let precont: number[] = []
+// 	while (true) {
+// 		let now = bb.RU(8)
+// 		if (!isNaN(now)) {
+// 			precont[precont.length] = now
+// 		} else break
+// 	}
+// 	if (notice) new Notice("OUT", 3000)
+// 	let cont = new Uint8Array(precont)
+// 	if (notice) console.log(precont)
+// 	if (notice) console.log(cont)
+// 	if (notice) new Notice("SWAP", 3000)
+// 	if (cont && cont.length > 0) {
+// 		if (notice) new Notice("INF", 3000)
+// 		let decomp = inflate(cont)
+// 		if (notice) console.log(decomp)
+// 		if (notice) new Notice("DONE, DECODE", 3000)
+// 		if (typeof (decomp) == "object") {
+// 			decomp = new TextDecoder().decode(decomp)
+// 			if (notice) new Notice("Success!")
+// 			return decomp
+// 		} else {
+// 			if (notice) new Notice("Failed.")
+// 		}
+// 	} else {
+// 		if (notice) new Notice("Couldnt Decompress.")
+// 	}
+// }
 function compressfile(data: string, notice?: boolean, settings?: compressorSettingsData) {
-	if (notice) new Notice("Started", 3000)
-	const comp = deflate(data)
-	let inf = inflate(comp)
-	if (inf && typeof (inf) != "string" && new TextDecoder().decode(inf) != data) {
-		if (notice) new Notice("Revert is corrupted.", 3000)
-		throw new Error("Revert not same,")
-	}
-	if (comp) {
-		if (notice) new Notice("MEST", 3000)
-		let bb = new BB()
-		comp.forEach((byte: Number) => {
-			// console.log(byte)
-			bb.WU(byte)
-		})
-		if (notice) new Notice("SWAP", 3000)
-		// let linkblk = ""
-		// 	;[...data.matchAll(/\[\[[^\]]*\]\]/gm)].forEach((match) => {
-		// 		console.log(match)
-		// 		linkblk += match[0]
-		// 	})
-		let encd = encodeSafe(bb.G())
-		if (notice) new Notice("RLE", 3000)
-		if (encd) {
-			if (notice) new Notice("METADATA SET.", 3000)
-			let content = `DATABLK` + encd
-			if (content && content.length < data.length) {
-				if (notice) new Notice("Success!")
-				if (settings && settings.PrintResult) {
-					NoticePool.push(new Notice(`Compression:\nratio:${((content.length / data.length) * 100).toFixed(1)}%`))
-				}
-				return content
-			} else {
-				if (notice) new Notice("File isnt smaller.")
-			}
-		} else {
-			new Notice("Encoder failure.")
+	if (notice) new Notice("Started C", 3000)
+	let result: (string | undefined) = ""
+	try {
+		result = netcompress(data)
+		if (notice) new Notice("Done!")
+		if (settings && settings.PrintResult && result) {
+			NoticePool.push(new Notice(`Compression:\nratio:${((result.length / data.length) * 100).toFixed(1)}%`))
 		}
+	} catch (err) {
+		new Notice(err, 3000)
+		throw new Error(err)
 	}
+	if (result == "" || !result) throw new Error("Empty")
+	return result
 }
 function decompressfile(data: string, notice?: boolean) {
-	if (notice) new Notice("START", 3000)
-	let bb = new BB()
-	bb.F(decodeSafe(data.substring(data.indexOf("DATABLK") + 7)))
-	let precont: number[] = []
-	while (true) {
-		let now = bb.RU()
-		if (!isNaN(now)) {
-			precont[precont.length] = now
-		} else break
+	if (notice) new Notice("Started D", 3000)
+	let result: (string | undefined) = ""
+	try {
+		result = netdecompress(data)
+		if (notice) new Notice("Done!")
+	} catch (err) {
+		new Notice(err, 3000)
+		throw new Error(err)
 	}
-	if (notice) new Notice("OUT", 3000)
-	let cont = new Uint8Array(precont)
-	if (notice) console.log(precont)
-	if (notice) console.log(cont)
-	if (notice) new Notice("SWAP", 3000)
-	if (cont && cont.length > 0) {
-		if (notice) new Notice("INF", 3000)
-		let decomp = inflate(cont)
-		if (notice) console.log(decomp)
-		if (notice) new Notice("DONE, DECODE", 3000)
-		if (typeof (decomp) == "object") {
-			decomp = new TextDecoder().decode(decomp)
-			if (notice) new Notice("Success!")
-			return decomp
-		} else {
-			if (notice) new Notice("Failed.")
-		}
-	} else {
-		if (notice) new Notice("Couldnt Decompress.")
-	}
+	if (result == "" || !result) throw new Error("Empty")
+	return result
 }
 class compressorSettings extends PluginSettingTab {
 	plugin: compressorPlugin;
