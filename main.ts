@@ -44,7 +44,7 @@ export default class compressorPlugin extends Plugin {
 							hook.editor.refresh = () => { }
 							globalLeafs.push(["ctxt", file.path, hook])
 							this.app.vault.read(file).then((data) => {
-								if (file && data && (!data.includes("\n") && !data.includes(" "))) {
+								if (file && data /*&& (!data.includes("\n") && !data.includes(" "))*/) {
 									new Notice("Attempting to load.")
 									setTimeout(() => {
 										let decompress = null
@@ -81,7 +81,7 @@ export default class compressorPlugin extends Plugin {
 			if (file2 && file2.extension == "ctxt") {
 				this.app.vault.read(file2).then((data) => {
 					if (statusBarItemEl2 && this.settings.FileSize) statusBarItemEl2.setText(data.length + "B")
-					if (file2 && data && (data.includes("\n") || data.includes(" "))) {
+					if (file2 && data/* && (data.includes("\n") || data.includes(" "))*/) {
 						let compress = null
 						try {
 							NoticePool.forEach((n) => {
