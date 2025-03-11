@@ -263,7 +263,9 @@ export function netdecompress(str) {
                 if (isNaN(n)) break
                 switch (n) {
                     case 0:
-                        let ind = W.RU(13)
+                        let ind = 0
+                        if (id == 5) ind = W.RU(13)
+                        if (id == 3) ind = W.RU(12)
                         if (isNaN(ind)) break
                         out += wordDictLarge[ind]
                         break;
