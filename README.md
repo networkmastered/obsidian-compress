@@ -32,8 +32,8 @@ You can install/update the plugin in one of two ways:
 
 
 ## Uninstalling
->**Warning**
-BEFORE UNINSTALLING/DISABLING THIS PLUGIN. CONVERT YOUR FILES BACK TO A MARKDOWN!<br>
+>[!WARNING]
+>BEFORE UNINSTALLING/DISABLING THIS PLUGIN. CONVERT YOUR FILES BACK TO A MARKDOWN!<br>
 If not, you will NOT be able to access compressed files. You will still be able to reinstall the plugin and convert the files.
 
 ## Future
