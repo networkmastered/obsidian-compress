@@ -1,11 +1,11 @@
 {
 	"name": "compress",
-	"version": "1.1.0",
+	"version": "1.1.2",
 	"description": "Make your files smaller with compression!",
 	"main": "main.js",
 	"scripts": {
-		"dev": "node esbuild.config.mjs",
-		"build": "node archive/testchecks.js && tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+		"dev": "node archive/testchecks.js && tsc -noEmit -skipLibCheck && node esbuild.config.mjs",
+		"build": "node archive/testchecks.js && tsc -noEmit -skipLibCheck && node esbuild.config.mjs production && node archive/versions/execute.js",
 		"version": "node version-bump.mjs && git add manifest.json versions.json"
 	},
 	"keywords": [],

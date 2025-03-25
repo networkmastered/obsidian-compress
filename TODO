@@ -1,0 +1,12 @@
+[ ] Finish Compression on plugins
+[ ] If compression is only on open file cehck for ![[]] links for rendering
+[ ] Search for more custom data plugins
+[ ] Compressed Vault?
+[ ] Custom ViewType/Leaf
+[ ] Block the data
+[ ] checksum the data
+[ ] implament some kind of repairer
+[ ] Rewrite README to make it more polished and add links for easier reading
+[ ] Create a version control system so i dont accidently publish broken or same versions
+[ ] Create a setting for "Uncompress entire Vault" and "Uncompress open file and requisite"
+[ ] Seperate each plugin compression type to a new script

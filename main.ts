@@ -1,8 +1,8 @@
-import { App, MarkdownView, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
-// import { inflate, deflate } from "./util/pakoMinified"
-// import { BB } from "./util/BB"
+
+import { App, MarkdownView, Notice, Plugin, PluginSettingTab, Setting, FileView } from 'obsidian';
+// import { inflate, deflate } from "./util/pako"
 // import { encodeSafe, decodeSafe } from "./util/runlength"
-import { netcompress, netdecompress } from "./util/networkmastercompression"
+import { netcompress, netdecompress, plugincompress, plugindecompress } from "./util/networkmastercompression"
 
 interface compressorSettingsData {
 	// mySetting: string;
@@ -10,14 +10,16 @@ interface compressorSettingsData {
 	FileSize: boolean;
 	LeaveRawLinks: boolean;
 	Debug: boolean;
+	ExcalidrawPrecision: number;
 }
 
 const DEFAULT_SETTINGS: compressorSettingsData = {
 	// mySetting: 'default',
-	PrintResult: true,
-	FileSize: true,
+	PrintResult: false,
+	FileSize: false,
 	LeaveRawLinks: true,
-	Debug: false
+	Debug: false,
+	ExcalidrawPrecision: 2,
 }
 let globalLeafs: any[] = []
 let NoticePool: Notice[] = []
@@ -83,7 +85,7 @@ export default class compressorPlugin extends Plugin {
 				this.app.vault.read(file2).then((data) => {
 					if (statusBarItemEl2 && this.settings.FileSize) statusBarItemEl2.setText(data.length + "B")
 					// if (file2 && data && (data.includes("\n") || data.includes(" "))) {
-					if (file2 && data && checkCompFile(data)) {
+					if (file2 && data && !checkCompFile(data)) {
 						let compress = null
 						try {
 							NoticePool.forEach((n) => {
@@ -197,7 +199,7 @@ export default class compressorPlugin extends Plugin {
 		//set elsewhere
 		statusBarItemEl2 = this.addStatusBarItem();
 		statusBarItemEl2.setText("");
-		statusBarItemEl2.title = "File Size"
+		statusBarItemEl2.title = "File size"
 
 		this.addCommand({
 			id: 'createctxt',
@@ -233,9 +235,49 @@ export default class compressorPlugin extends Plugin {
 		// 	}
 		// }, 100));
 		//<div style="position: absolute;left:0%;right:0%;width:100%;height:100%;background-color:rgba(20,20,20,0.6);z-index: 99999999999;">Content Compressed.</div>
+
+
+
+		//NOT FINISHED.
+		// ; (async () => {
+		// 	while (true) {
+		// 		await new Promise((r) => { setTimeout(r, 100) })
+		// 		if (this.app.vault.getFiles().length > 0) break
+		// 	}
+		// 	var hn = false
+		// 	this.app.vault.getFiles().forEach((file) => {
+		// 		console.log(file.name)
+		// 		this.app.vault.read(file).then((data) => {
+		// 			if (file) {
+		// 				if (data.includes("excalidraw") && data.includes("```compressed-json") && !hn) {
+		// 					alert("File Compressor: You have excalidraw installed with compression, please go to settings -> excalidraw -> Saving -> Compression and disable it. That way it can be compressed by this plugin. Source cause: " + file.path)
+		// 					hn = true
+		// 				}
+		// 				// var out = plugindecompress(file, data)
+		// 				plugincompress(file, data, this.settings)
+		// 				var out = plugindecompress(file, data)
+		// 				// if (out) this.app.vault.modify(file, out)
+		// 				console.log("WRITER DISABLED.")
+		// 			}
+		// 		})
+		// 	})
+		// })()
+
+		this.app.workspace.on("quit", () => {
+			//NOT FINISHED.
+			// this.app.vault.getFiles().forEach((file) => {
+			// 	console.log(file.name)
+			// 	this.app.vault.read(file).then((data) => {
+			// 		if (file) {
+			// 			var out = plugincompress(file, data)
+			// 			if (out) this.app.vault.modify(file, out)
+			// 		}
+			// 	})
+			// })
+		})
 	}
 	onunload() {
-		alert("In order to view CTXT files you will need to re-enable the plugin. If you are deleting the plugin, please convert your files back before.")
+		// alert("In order to view CTXT files you will need to re-enable the plugin. If you are deleting the plugin, please convert your files back before.")
 	}
 	async loadSettings() {
 		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
@@ -348,7 +390,7 @@ function decompressfile(data: string, notice?: boolean) {
 function checkCompFile(data: string) {
 	var state = false
 	try {
-		state = netdecompress(data) == ""
+		state = (netdecompress(data) || "").length > 0
 	} catch (_) { }
 	return state
 }
@@ -388,12 +430,27 @@ class compressorSettings extends PluginSettingTab {
 			.setDesc('Unfortunetly the graph view will not maintain links. The graph cannot read the compressed data. Nor if the links are raw')
 		new Setting(containerEl)
 			.setName('Debug')
-			.setDesc('Toast all data')
+			.setDesc('Toasts all the events that are happening. Useful for debugging.')
 			.addToggle(bool => bool
 				.setValue(this.plugin.settings.Debug)
 				.onChange(async (value) => {
 					this.plugin.settings.Debug = value;
 					await this.plugin.saveSettings();
 				}));
+		// new Setting(containerEl)
+		// 	.setName('-----Plugin Data Compression-----')
+		// 	.setDesc('Settings for compressing data that plugins save to vault')
+		//useless excelidraw uses whole offsets
+		// var ex_DP = new Setting(containerEl)
+		// 	.setName('Excalidraw: Decimal Precision')
+		// 	.setDesc(`How many decimals to have when saving numbers (${this.plugin.settings.ExcalidrawPrecision} DP)`)
+		// 	.addSlider(num => num
+		// 		.setValue(this.plugin.settings.ExcalidrawPrecision)
+		// 		.setLimits(0, 5, 1)
+		// 		.onChange(async (value) => {
+		// 			this.plugin.settings.ExcalidrawPrecision = value;
+		// 			ex_DP.setDesc(`How many decimals to have when saving numbers (${this.plugin.settings.ExcalidrawPrecision} DP) ${(this.plugin.settings.ExcalidrawPrecision==0)?"NO DECIMALS(VERY BAD)":""}`)
+		// 			await this.plugin.saveSettings();
+		// 		}));
 	}
 }

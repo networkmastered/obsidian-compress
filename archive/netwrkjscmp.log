@@ -1,0 +1,61 @@
+Generated log file from WDIR/version/execute.js
+
+$> Executed Build.
+
+> compress@1.1.2 build
+> node archive/testchecks.js && tsc -noEmit -skipLibCheck && node esbuild.config.mjs production && node archive/versions/execute.js
+
+$> Executed Tests.
+Test netcompress 1. Passed ✔
+Test netcompress 2. Passed ✔
+Test netcompress 3. Passed ✔
+Test netcompress 4. Passed ✔
+Test netcompress 5. Passed ✔
+Test netcompress 6. Passed ✔
+Test netcompress 7. Passed ✔
+Test netcompress 8. Passed ✔
+Test netdecompress 9. Passed ✔
+Test netdecompress 10. Passed ✔
+Test netdecompress 11. Passed ✔
+Test encodeSafe 12. Passed ✔
+Test encodeSafe 13. Passed ✔
+Test encodeSafe 14. Passed ✔
+Test encodeSafe 15. Passed ✔
+Test encodeSafe 16. Passed ✔
+Test encodeSafe 17. Passed ✔
+Test encodeSafe 18. Passed ✔
+Test encodeSafe 19. Passed ✔
+Test encodeSafe 20. Passed ✔
+Test encodeSafe 21. Passed ✔
+Test encodeSafe 22. Passed ✔
+Test encodeSafe 23. Passed ✔
+Test decodeSafe 24. Passed ✔
+Test decodeSafe 25. Passed ✔
+Test decodeSafe 26. Passed ✔
+Test decodeSafe 27. Passed ✔
+Test decodeSafe 28. Passed ✔
+Test decodeSafe 29. Passed ✔
+Test decodeSafe 30. Passed ✔
+Test decodeSafe 31. Passed ✔
+Test decodeSafe 32. Passed ✔
+Test decodeSafe 33. Passed ✔
+Test decodeSafe 34. Passed ✔
+Test decodeSafe 35. Passed ✔
+Finished. 35 have passed 0 have failed 35/0
+(node:14788) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/user/Desktop/Repos/TextEditorObsidianPluginPublic/util/BB.js is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to C:\Users\user\Desktop\Repos\TextEditorObsidianPluginPublic\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+$> Executed NMJSCompress
+VC Created new TS213484. FS 56. FLAGS: --master --full --repush -m -vc --bumpall -wl --save --mini2 --complvl5 -pr --MoveTo:LENV["ObsidianDir"] --ignore:myselfAndParent -wd:ParParPar
+
+Running minifier V2
+minifier[LL:WARN]:  Level 5 enabled. Level 5 is significently low. Set to approx 10+ (0-100). Use 'execute.js --printlvllist' or 'execute.js --pll' or click: [NetworkMasterCLIEnums.ConsoleLogging.EmbedTypes.New.V2.Button]{NWK::'EXEC',WTR:'/-=E;PR!BtnFt',STL:'BoxButton;BoldAndUnderline',WYD:NetworkMasterCLIEnums.ConsoleLogging.PrintingFunctions.Events.Execute_By_Meta_PREM,PREM:"__DIR.F;CD %F;EXEC_CMD __DIR.CR -pll"}(This.)
+Size Difference: 857 B
+
+Copied over files to: LENV.ObsidianDir.
+
+$> Execution Finished
+
+$> ?? --wl detected. Written to wd[wiesl]/netwrkjscmp.log
