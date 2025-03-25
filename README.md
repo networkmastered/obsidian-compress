@@ -3,7 +3,7 @@
 
 File compressor creates a new file type which is a .ctxt(compressed txt). Although it says txt it does support markdown. The plugin is designed to be as automated as possible. Which means that you do not need to compress and decompress the files yourself. All you need to do is click the "Create new ctxt" button. Which will then create the new ctxt in the root directory of your vault.
 
-Once you have a new ctxt file you just need to edit it like a normal file. The plugin will do the rest. If you ever see the compressed data then close the tab and re-open it.
+Once you have a new ctxt file you just need to edit it like a normal file. The plugin will do the rest. If you ever see the compressed data then you should close the tab and re-open it.
 
 The editor works by taking Obsidian's default markdown editor and then telling it to not refresh it to the saved data(which doesnt always work), then once Obsidian saves the plugin will then copy all of the contents of the file and then compress it.
 
@@ -12,7 +12,7 @@ Only .MD files have been tested. But we plan on making it work with multiple plu
 ## Installation
 You can install/update the plugin in one of two ways:
 
-1. You can install and update the pluin from the Obsidian community plugin marketplace.
+1. You can install and update the plugin from the Obsidian community plugin marketplace.
 
 2. You may also go to this repositorys github releases and then download the latest main and manifest then go into your vaults directory, open up your .Obsidian folder, if you are on linux you may need to find out how to view hidden files. Then you just need to open up the plugins folder, create a new folder. You can name the folder whatever you like, or just "FileCompressor" or "compressor" then just drag the main and manifest files you downloaded into the folder!
 
@@ -32,16 +32,17 @@ You can install/update the plugin in one of two ways:
 
 
 ## Uninstalling
-[!WARNING]
-BEFORE UNINSTALLING/DISABLING THIS PLUGIN. CONVERT YOUR FILES BACK TO AN MARKDOWN!
-
-<i style="color:red">If not, you will not be able to access compressed files. You can still reinstall the plugin and convert.</i>
+>**Warning**
+BEFORE UNINSTALLING/DISABLING THIS PLUGIN. CONVERT YOUR FILES BACK TO A MARKDOWN!<br>
+If not, you will NOT be able to access compressed files. You will still be able to reinstall the plugin and convert the files.
 
 ## Future
 We plan on adding better compression and a better system to allow files to be in plaintext while editing.
 
 ## What comes packaged:
-The compression plugin is packaged with pako, a compression library and a custom one. The plugin also comes with the following **features**:
+The compression plugin is packaged with pako, a compression library and a custom one. The plugin also comes with the following 
+
+**features**:
 
 Buttons:
 > "**Create new ctxt**" - will create a new .ctxt file.<br>
@@ -54,7 +55,7 @@ Buttons:
 ## Compression Ratios:
 These ratios will be based off of the bee movie script as it provides a realistic use case and has variations in the words.
 
-*(can be found at https://www.sample-videos.com/download-sample-text-file.php)*
+*(can be found at https://gist.githubusercontent.com/MattIPv4/045239bc27b16b2bcf7a3a9a4648c08a/raw)*
 
 > What is a compression ratio?<br>a compression ratio is how much the compressed version takes up of the raw version. (25kB compressed of 100kB = 25%, 25kB compressed of 50kB = 50%)
 
