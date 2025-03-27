@@ -24,12 +24,12 @@ You can install/update the plugin in one of two ways:
 - Open obsidian or save your files and reload Obsidian(Ctrl+p Reload app without saving)
 
 
-## NOTICE
+## NOTICE:
 1. Changing a files contents to a more obscure one will come with the risk of data loss.
 2. Links do work but will not show up in the Graph.
 3. Plugins may fail to read the data.
-4. This uses a CLOSED source build script along with esbuild.
-
+4. This uses a CLOSED source build script along with esbuild. You will need to remove the " && node archive/versions/execute.js" in the package in order to build.
+5. The larger your file is the more intensive the compression system will be. Each time a file is saved it runs multiple compression algorithems. If you are using large files then you may need to 
 
 ## Uninstalling
 >[!WARNING]
@@ -62,4 +62,4 @@ These ratios will be based off of the bee movie script as it provides a realisti
 1.0.0-1.0.2-1.1.0 PRE-RELEASE: Error<br>
 1.0.0: 55.4% ( Initial Release )<br>
 1.1.0: 55.4% ( Ready for publishing )<br>
-1.2.0: 55.4% ( Decrease plugin size & start of plugin compression)<br>
+1.1.2: 55.4% ( Follow Obsidian's publishing )<br>
