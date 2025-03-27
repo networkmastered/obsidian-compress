@@ -1,7 +1,7 @@
 {
 	"id": "compress",
 	"name": "File Compressor",
-	"version": "1.2.2",
+	"version": "1.2.5",
 	"minAppVersion": "0.15.0",
 	"description": "Make your files smaller with compression!",
 	"author": "networkmastered",

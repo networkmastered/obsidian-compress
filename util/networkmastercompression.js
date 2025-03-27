@@ -20,7 +20,7 @@ let wordDictLarge = (() => { let r = new BB(); r.F(decodeSafe("4xZb9ulmjrzrsgDMN
 
 let wordDictSmall = ["im", "we", "am", "it", "in", "my", "and", "the"] // Max Length: 8, entry length 2+
 let wordDictTiny = ["i", " ", "a", "\n"] // Max Length: 4, entry length 1+
-
+let Dictblklist = [" ", ".", ",", "\n", ":", ";", "\"", "'", "`", ">", "<", "?", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "-", "_", "=", "+", "[", "]", "{", "}", "|", "\\", "/", "~"]
 wordDict.forEach((w, i) => {
     if (w.length < 3) throw new Error("Dict, " + (i + 1))
 })
@@ -28,7 +28,7 @@ wordDict.forEach((w, i) => {
 let type1 = /[a-z\.\-\: \n]/gm
 let alphabet = "abcdefghijklmnopqrstuvwxyz"
 let type1swap = "\nabcdefghijklmnopqrstuvwxyz.-: ".split("")
-function runTest(str, specificTest, AntiBreak) {
+function runTest(str, specificTest, AntiBreak, settings) {
     let CompData = new BB()
     CompData.WU(5, 1)
     let results = { type1: { done: false }, type2: { done: false }, type3: { done: false }, type4: { done: false }, type5: { done: false }, type6: { done: false } }
@@ -64,14 +64,16 @@ function runTest(str, specificTest, AntiBreak) {
         while (true) {
             if (drain.length == 0) break
             let fnd = false
-            wordDict.forEach((wrd, i) => {
-                if (!fnd && drain.startsWith(wrd)) {
-                    W.WU(2, 0)
-                    W.WU(12, i)
-                    drain = drain.replace(wrd, "")
-                    fnd = true
-                }
-            })
+            if (drain.length > 2 && !Dictblklist.includes(drain.substring(0, 1)) && !Dictblklist.includes(drain.substring(1, 2)) && !Dictblklist.includes(drain.substring(2, 3))) {
+                wordDict.forEach((wrd, i) => {
+                    if (!fnd && drain.startsWith(wrd)) {
+                        W.WU(2, 0)
+                        W.WU(12, i)
+                        drain = drain.replace(wrd, "")
+                        fnd = true
+                    }
+                })
+            }
             wordDictSmall.forEach((wrd, i) => {
                 if (!fnd && drain.startsWith(wrd)) {
                     W.WU(2, 1)
@@ -109,22 +111,24 @@ function runTest(str, specificTest, AntiBreak) {
         while (true) {
             if (drain.length == 0) break
             let fnd = false
-            wordDictLarge.forEach((wrd, i) => {
-                if (!fnd && drain.startsWith(wrd)) {
-                    W.WU(3, 0)
-                    W.WU(13, i)
-                    drain = drain.replace(wrd, "")
-                    fnd = true
-                }
-            })
-            wordDict.forEach((wrd, i) => {
-                if (!fnd && drain.startsWith(wrd)) {
-                    W.WU(3, 1)
-                    W.WU(12, i)
-                    drain = drain.replace(wrd, "")
-                    fnd = true
-                }
-            })
+            if (drain.length > 2 && !Dictblklist.includes(drain.substring(0, 1)) && !Dictblklist.includes(drain.substring(1, 2)) && !Dictblklist.includes(drain.substring(2, 3))) {
+                wordDictLarge.forEach((wrd, i) => {
+                    if (!fnd && drain.startsWith(wrd)) {
+                        W.WU(3, 0)
+                        W.WU(13, i)
+                        drain = drain.replace(wrd, "")
+                        fnd = true
+                    }
+                })
+                wordDict.forEach((wrd, i) => {
+                    if (!fnd && drain.startsWith(wrd)) {
+                        W.WU(3, 1)
+                        W.WU(12, i)
+                        drain = drain.replace(wrd, "")
+                        fnd = true
+                    }
+                })
+            }
             wordDictSmall.forEach((wrd, i) => {
                 if (!fnd && drain.startsWith(wrd)) {
                     W.WU(3, 2)
@@ -207,15 +211,15 @@ function runTest(str, specificTest, AntiBreak) {
         results.type6.result = out + ";" + W.G()
         results.type6.done = true
     }
-
-
     Object.keys(results).forEach((type) => {
         if (results[type] && results[type].done && results[type].result) {
             let MD = new BB()
             let LZC = ""
             let PKC = ""
+            let RRC = ""
             let temp = LZ.compress(results[type].result)
-            if (LZ.decompress(temp) == results[type].result) { LZC = temp.replace("` ", "•") } else { throw new Error("Mismatch 1") }
+            if (LZ.decompress(temp) == results[type].result) { LZC = temp.replace("` \" K", "⁑").replace("` \" ", "⁕").replace("` ", "•") } else { throw new Error("Mismatch 1") }
+            // if (settings && settings.PakoCompress) {
             temp = deflate(results[type].result)
             if (new TextDecoder().decode(inflate(temp)) == results[type].result) {
                 let W = new BB()
@@ -225,7 +229,8 @@ function runTest(str, specificTest, AntiBreak) {
                 })
                 PKC = W.G()
             } else { throw new Error("Mismatch 2") }
-
+            // }
+            // if (!AntiBreak) RRC = runTest(str, null, true)
             // console.log("DATA", "\n1.", LZC, "\n2.", PKC, "\n3.", PZC, "\n4.", LKC)
             // if (LZC.length <= PKC.length && LZC.length <= PZC.length && LZC.length <= LKC.length && LZC.length < results[type].result.length) {
             //     MD.WU(5, 0)
@@ -243,13 +248,23 @@ function runTest(str, specificTest, AntiBreak) {
             //     MD.WU(5, 31)
             // }
             // results[type].result = MD.G() + results[type].result
-            if (LZC.length <= PKC.length && LZC.length < results[type].result.length) {
+            let success = [results[type].result.length]
+            if (PKC && PKC.length > 0) success.push(PKC.length)
+            if (LZC && LZC.length > 0) success.push(LZC.length)
+            if (RRC && RRC.length > 0) success.push(RRC.length)
+            let smallest = Math.min(...success)
+            if (smallest == LZC.length && LZC.length > 0) {
                 results[type].result = LZC
                 MD.WU(5, 1)
-            } else if (PKC.length <= LZC.length && PKC.length < results[type].result.length) {
+            } else if (smallest == PKC.length && PKC.length > 0) {
                 results[type].result = PKC
                 MD.WU(5, 2)
-            } else {
+            }
+            // else if (smallest == RRC.length && RRC.length > 0) {
+            //     results[type].result = RRC
+            //     MD.WU(5, 3)
+            // } 
+            else {
                 MD.WU(5, 31)
             }
             results[type].result = MD.G() + results[type].result
@@ -277,8 +292,8 @@ function runTest(str, specificTest, AntiBreak) {
         return "UNCOMP" + encodeSafe(str)
     }
 }
-export function netcompress(str, imdtyp) {
-    let out = runTest(str, imdtyp); return out
+export function netcompress(str, imdtyp, sett) {
+    let out = runTest(str, imdtyp, false, sett); return out
 }
 export function netdecompress(str) {
     if (str.startsWith("UNCOMP")) return decodeSafe(str.substring(6))
@@ -303,7 +318,7 @@ export function netdecompress(str) {
     let typ = r.RU(5)
     switch (typ) {
         case 1:
-            str = LZ.decompress(str.replaceAll("•", "` "))
+            str = LZ.decompress(str.replace("⁑", "` \" K").replace("•", "` ").replace("⁕", "` \" "))
             break
         case 2:
             let sta = new BB()
@@ -311,6 +326,9 @@ export function netdecompress(str) {
             let bk = []
             while (true) { let nr = sta.RU(8); if (isNaN(nr)) { break }; bk.push(nr) }
             str = new TextDecoder().decode(inflate(new Uint8Array(bk)))
+            break
+        case 3:
+            str = netdecompress(str) || str
             break
     }
     let W = new BB()

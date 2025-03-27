@@ -63,3 +63,5 @@ These ratios will be based off of the bee movie script as it provides a realisti
 1.0.0: 55.4% ( Initial Release )<br>
 1.1.0: 55.4% ( Ready for publishing )<br>
 1.1.2: 55.4% ( Follow Obsidian's publishing )<br>
+1.2.2: 55.4% ( Huffman encoding added. )<br>
+1.2.5: 55.4% ( Performance Improvements 10s-4s )

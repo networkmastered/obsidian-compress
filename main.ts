@@ -10,6 +10,7 @@ interface compressorSettingsData {
 	FileSize: boolean;
 	LeaveRawLinks: boolean;
 	Debug: boolean;
+	// PakoCompress: boolean;
 	ExcalidrawPrecision: number;
 }
 
@@ -19,6 +20,7 @@ const DEFAULT_SETTINGS: compressorSettingsData = {
 	FileSize: false,
 	LeaveRawLinks: true,
 	Debug: false,
+	// PakoCompress: true,
 	ExcalidrawPrecision: 2,
 }
 let globalLeafs: any[] = []
@@ -362,7 +364,7 @@ function compressfile(data: string, notice?: boolean, settings?: compressorSetti
 	if (notice) new Notice("Started C", 3000)
 	let result: (string | undefined) = ""
 	try {
-		result = netcompress(data)
+		result = netcompress(data, null, settings)
 		if (notice) new Notice("Done!")
 		if (settings && settings.PrintResult && result) {
 			NoticePool.push(new Notice(`Compression:\nratio:${((result.length / data.length) * 100).toFixed(1)}%`))
@@ -425,6 +427,15 @@ class compressorSettings extends PluginSettingTab {
 					this.plugin.settings.FileSize = value;
 					await this.plugin.saveSettings();
 				}));
+		// new Setting(containerEl)
+		// 	.setName('Pako')
+		// 	.setDesc('Use Pako to improve compression. May be intensive.')
+		// 	.addToggle(bool => bool
+		// 		.setValue(this.plugin.settings.PakoCompress)
+		// 		.onChange(async (value) => {
+		// 			this.plugin.settings.PakoCompress = value;
+		// 			await this.plugin.saveSettings();
+		// 		}));
 		new Setting(containerEl)
 			.setName('NOTICE:')
 			.setDesc('Unfortunetly the graph view will not maintain links. The graph cannot read the compressed data. Nor if the links are raw')
